@@ -44,7 +44,7 @@ io.on("connect", (socket) => {
         ? ⬇️ Emitimos eventos hacia el cliente
         */
     socket.emit("message-receipt", {
-      message: "Mensaje recibido en el servidor",
+      message: "Mensaje recibido en el servidor de nuevo",
     });
   });
 });

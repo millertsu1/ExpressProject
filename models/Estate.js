@@ -4,6 +4,7 @@ const fetch =require('node-fetch')
 const EstateSchema = new mongoose.Schema({
     address:{
         type: String,
+        unique:true,
         required:true,
     },
     city:{
@@ -63,9 +64,8 @@ const EstateSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    image:{
-        type: String,
-        required: true
+    image: {
+        type: String, 
     }
 
 })
