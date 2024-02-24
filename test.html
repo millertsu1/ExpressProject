@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sniglet:wght@400;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./test.css">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <h1 class="main-title">TalentoTech - Chat</h1>
+        <div class="mensajes" id="mensajes">
+            <!-- Aqui van a ir los mensajes -->
+        </div>
+        <div class="container-response">
+            <input name="envio-mensajes" id="envio-mensajes" cols="30" rows="10" placeholder="Escribe aqui tu mensaje">
+            <button type="button" id="send">Enviar</button>
+        </div>
+    </div>
+</body>
+
+<script src="https://cdn.socket.io/4.7.4/socket.io.min.js" integrity="sha384-Gr6Lu2Ajx28mzwyVR8CFkULdCU7kMlZ9UthllibdOSo6qAiN+yXNHqtgdTvFXMT4" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+
+    $(document).ready(function(){
+        /** Aqui implementamos la parte que escucha */
+        var socket = io('http://localhost:3001', {
+            transports: ['websocket']
+        })
+
+        socket.on('connect', function(socket){
+            console.log("connected")
+        })
+
+        /* Estoy escuchando el evento desde mi pagina web **/
+        socket.on('message-receipt', function(data){            
+            addMenssages(data)
+        })
+
+        /** Aqui finaliza la parte que escucha */
+
+
+        /** Aqui implementamos la parte que envia */
+        $("#send").click(function(){
+            prepareMessage(socket);
+        })
+
+        $("#envio-mensajes").on("keypress", function() {
+            if (event.which === 13) {
+                prepareMessage(socket);
+            }
+        });
+    })
+
+    function addMenssages(data, sender = false){
+        const messageElement = document.createElement('li');
+        messageElement.textContent = data.body
+        messageElement.style.textAlign ='left'
+        if(sender){
+            messageElement.style.background = 'teal';
+            messageElement.style.color = 'white';
+        }
+
+        const messagesDiv = document.getElementById('mensajes')
+        messagesDiv.appendChild(messageElement)
+        $("#envio-mensajes").val("");
+    }
+
+    function prepareMessage(socket){
+        content = $("#envio-mensajes").val();
+        console.log(content)
+
+        var payload = {
+                "body": content,
+                "from": "65ceb797600b0159e555930f",
+                "to": "65cfefe456bf1d4ec68d497e"
+            }
+        var data = JSON.stringify(payload);
+        
+        socket.emit("message", data)
+        addMenssages(payload, true)
+    }
+</script>
+</html>

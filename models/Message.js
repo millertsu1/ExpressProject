@@ -1,30 +1,26 @@
 const mongoose = require('mongoose')
-const UserSchema = require('../models/User')
 
 const MessageSchema = new mongoose.Schema({
-    body:{
-
+    body: {
         type: String,
         required: true
     },
-    from:{
-        type: UserSchema.Types.ObjectId,
-        ref:'user',
+    from: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
         required: true
     },
-    to:{
-        type: UserSchema.Types.ObjectId,
-        ref:'user',
+    to: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
         required: true
     },
-    readed:{
-        type:Boolean,
-        required: true,
-        default:false
+    readed: {
+        type: Boolean,
+        default: false
     }
 },{
-    timestamps:true
-}
+    timestamps: true
 })
 
 module.exports = mongoose.model('message', MessageSchema)

@@ -1,37 +1,33 @@
-const express = require('express');
+/* const express = require('express');
 const router = express.Router();
 const EstateSchema = require('../models/Estate');
 const EstateController = require('../controllers/EstateController');
 const estateController = new EstateController();
 const multer = require('multer');
-/* 
-? traer todas las propiedades
-*/
+
+//traer todas las propiedades
+
 router.get('/estate', async (req, res) => {
     //Traer todos las peliculas
     let estates = await EstateSchema.find(); 
     res.json(estates)
 })
-/* 
-? terminamos de traer todas las propiedades
-*/
 
-/* 
-? traer una propiedad en espcifico
-*/
+
+ // traer una propiedad en espcifico
 router.get('/estate/:id', async (req, res) => {
     //Traer un usuario especifico pasando el ID
     var id = req.params.id
     let estate = await EstateSchema.findById(id); 
     res.json(estate)
 })
-/* 
-? terminamos de traer la propiedad
-*/
 
-/* 
-? crear una propiedad
-*/
+//terminamos de traer la propiedad
+
+
+ 
+//crear una propiedad
+
 router.post('/estate', async (req, res) => {
     //Crear un inmueble
 
@@ -107,12 +103,11 @@ router.delete('/estate/:id', (req, res) => {
 
 })
 
-/* 
-? terminamos de crear la propiedad
-*/
-/* 
-*configuracion de la libreria Multer
-*/
+
+//terminamos de crear la propiedad
+
+//configuracion de la libreria Multer
+
 const storage = multer.diskStorage({
     destination: function(req, file, cb){
         cb(null, 'uploads/')
@@ -122,9 +117,9 @@ const storage = multer.diskStorage({
     }
 });
 
-/* 
-? con esta funcion  estamos filtando los archivos a cargar para que solo sean imagenes de cualquier tipo, si dejar subir un archivo con otra extension diferente.
-*/
+
+//? con esta funcion  estamos filtando los archivos a cargar para que solo sean imagenes de cualquier tipo, si dejar subir un archivo con otra extension diferente.
+
 
 const fileFilter = (req, file, cb) =>{
     if(file.mimetype.startsWith('image/')){
@@ -136,9 +131,9 @@ const fileFilter = (req, file, cb) =>{
 
 const upload = multer({ storage: storage, fileFilter: fileFilter})
 
-/* 
-*servicio web para el almacenamiento de archivos 
-*/
+ 
+//servicio web para el almacenamiento de archivos 
+
 router.post('/upload/:id/estate', upload.single('file'), (req, res) => {
     if(!req.file){
         return res.status(400).send({'status':'error','message':'No se proporciono ningun archivo'})
@@ -157,4 +152,4 @@ router.post('/upload/:id/estate', upload.single('file'), (req, res) => {
     })
 })
 
-module.exports = router
+module.exports = router */

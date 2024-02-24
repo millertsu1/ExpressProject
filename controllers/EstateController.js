@@ -1,4 +1,4 @@
-const estateSchema = require('../models/Estate');
+/* const estateSchema = require('../models/Estate');
 const { validationResult } = require('express-validator');
 
 // Función para generar un código único
@@ -114,4 +114,4 @@ exports.upload = async (req, res) => {
         console.error("Error al procesar la solicitud:", error);
         res.status(500).send("Error al procesar la solicitud");
     }
-};
+}; */

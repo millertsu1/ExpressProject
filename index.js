@@ -4,7 +4,7 @@ const router = express.Router(); // Enrutar los servicios web
 const port = 3001; // Escuchar la ejecucion del servidor
 require("dotenv").config(); //importo la libreria dotenv
 
-const socket = require("socket.io"); //importamos la libreria socket.IO
+const socket = require("socket.io"); //? importamos la libreria socket.IO
 
 const http = require("http").Server(app);
 /* 
@@ -23,31 +23,40 @@ mongoose.connect(DB_URL); // Creo la cadena de conexion
 
 const userRoutes = require("./routes/UserRoutes");
 const estateRoutes = require("./routes/EstateRoutes");
+const messageRoutes = require("./routes/MessageRoutes");
 
-//Metodo [GET, POST, PUT, PATCH, DELETE]
-// Nombre del servicio [/]
+const MessageSchema = require('./models/Message');
+
+//? Metodo [GET, POST, PUT, PATCH, DELETE]
+//? Nombre del servicio [/]
+
 router.get("/", (req, res) => {
   //Informacion a modificar
   res.send("Hello world");
 });
 
-io.on("connect", (socket) => {
-  console.log("connected succesfully");
+//? Metodos websocket 
 
-  /* 
-    ? ⬇️ Escuchando eventos desde el servidor
-    */
-  socket.on("message", (data) => {
-    console.log(data);
+io.on('connect', (socket) => {
+  console.log("connected")
+  //Escuchando eventos desde el servidor
+  socket.on('message', (data) => {
+      //? Almacenando el mensaje en la BD */
+      var payload = JSON.parse(data)
+      console.log(payload)
+      //?  Lo almaceno en la BD */
+      MessageSchema(payload).save().then((result) => {
+          //? Enviando el mensaje a todos los clientes conectados al websocket */
+          socket.broadcast.emit('message-receipt', payload)
+      }).catch((err) => {
+          console.log({"status" : "error", "message" :err.message})
+      })        
+  })
 
-    /* 
-        ? ⬇️ Emitimos eventos hacia el cliente
-        */
-    socket.emit("message-receipt", {
-      message: "Mensaje recibido en el servidor de nuevo",
-    });
-  });
-});
+  socket.on('disconnect', (socket) => {
+      console.log("disconnect")    
+  })
+})
 
 app.use(express.urlencoded({ extended: true })); // Acceder a la informacion de las urls
 app.use(express.json()); // Analizar informacion en formato JSON
@@ -62,9 +71,12 @@ app.use((req, res, next) => {
 
 //Ejecuto el servidor
 app.use(router);
-app.use("/", userRoutes);
 app.use("/uploads", express.static("uploads"));
-app.use("/", estateRoutes);
+app.use("/", userRoutes);
+/* app.use("/", estateRoutes); */
+app.use("/", messageRoutes)
+
+/** Ejecucion del servidor */
 http.listen(port, () => {
   console.log(`Listen on ${port}`);
 });
