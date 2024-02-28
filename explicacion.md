@@ -18,3 +18,21 @@
 [dotenv-documentation](https://www.npmjs.com/package/bcryptjs)
 - nodemon
 [nodemon-documentation](https://www.npmjs.com/package/nodemon)
+
+//usuarios pasando el ID
+
+query{
+  User(id: "65ceb797600b0159e555930f"){
+    email
+  }
+}
+
+// usuarios omitiendo e incluyendo datos
+
+query UserName($ID: String!, $withEmail: Boolean!, $skipLastname: Boolean!) {
+  User(id: $ID) {
+    name
+    @include(if: $withEmail) email
+    @skip(if: $skipLastname) lastname
+  }
+}

@@ -16,6 +16,9 @@ const io = socket(http); //
 ?⬆️Esta línea inicializa una nueva instancia de Socket.IO, un framework de WebSockets para Node.js, y la asocia con el servidor HTTP creado previamente. Esto se logra pasando el servidor HTTP http como argumento a la función socket, lo cual probablemente debería ser require('socket.io')(http) para seguir las convenciones típicas de importación y uso de Socket.IO. Esta línea permite que la aplicación maneje conexiones WebSocket a través de Socket.IO, facilitando la comunicación en tiempo real entre el servidor y los clientes conectados.
 */
 
+const { createYoga } = require('graphql-yoga');
+const schema = require('./graphql/schema');
+
 const DB_URL = process.env.DB_URL || ""; //creo una variable que bos permitira acceder a la base de datos
 
 const mongoose = require("mongoose"); // Importo la libreria mongoose
@@ -68,6 +71,9 @@ app.use((req, res, next) => {
 /* 
 ?⬆️ Este middleware tiene una funcionalidad específica: asignar la instancia de Socket.IO a la respuesta (res) de cada solicitud que maneje tu aplicación Express
 */
+
+const yoga = new createYoga({ schema });
+app.use('/graphql', yoga);
 
 //Ejecuto el servidor
 app.use(router);
