@@ -1,3 +1,6 @@
+/*
+* importaciones 
+*/
 const {GraphQLID, 
     GraphQLObjectType, 
     GraphQLString, 
@@ -56,6 +59,15 @@ const UserFilterInput =  new GraphQLInputObjectType({
     }
 })
 
+const EstateFilterInput =  new GraphQLInputObjectType({
+    name: 'EstateFilterInput',
+    fields:{
+        city: { type: GraphQLString },
+        state: { type: GraphQLString },
+        type: { type: GraphQLString },
+    }
+})
+
 const queries = {
     hello:{
         type: GraphQLString,
@@ -68,15 +80,33 @@ const queries = {
             id: { type: GraphQLID }
         }
     },
+    Estate: {
+        type: Estate,
+        resolve: resolvers.Estate,
+        args:{
+            id: { type: GraphQLID}
+        }
+    },
     Users: {
         type: GraphQLList(User),
         resolve: resolvers.Users
+    },
+    Estates: {
+        type: GraphQLList(Estate),
+        resolve: resolvers.Estates
     },
     UsersByFilter:{
         type: GraphQLList(User),
         resolve: resolvers.UsersByFilter,
         args:{
             filter: { type: UserFilterInput }
+        }
+    },
+    EstatesByFilter:{
+        type: GraphQLList(Estate),
+        resolve: resolvers.EstatesByFilter,
+        args:{
+            filter: { type: EstateFilterInput }
         }
     }
 }
